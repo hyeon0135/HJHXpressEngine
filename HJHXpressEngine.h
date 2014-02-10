@@ -20,7 +20,7 @@
 
 - (void)fetchDocumentListFromModuleIdentifier:(NSString *)identifier
                                        onPage:(NSInteger)page
-                            completionHandler:(void (^)(NSArray *documents, NSError *error))completionHandler;
+                            completionHandler:(void (^)(NSArray *documents, NSDictionary *pagination, NSError *error))completionHandler;
 
 - (void)fetchDocumentFromDocumentIdentifier:(NSString *)identifier
                           completionHandler:(void (^)(NSDictionary *document, NSError *error))completionHandler;

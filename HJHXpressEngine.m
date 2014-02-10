@@ -87,7 +87,7 @@
 
 - (void)fetchDocumentListFromModuleIdentifier:(NSString *)identifier
                                        onPage:(NSInteger)page
-                            completionHandler:(void (^)(NSArray *documents, NSError *error))completionHandler
+                            completionHandler:(void (^)(NSArray *documents, NSDictionary *pagination, NSError *error))completionHandler
 {
     NSURLRequest *request = [HJHXpressEngineRequest requestForFetchingDocumentListFromModuleIdentifier:identifier
                                                                                                 onPage:page];
@@ -95,13 +95,13 @@
                                                  completionHandler:^(NSData *data, NSURLResponse *response, NSError *error)
     {
         if (error) {
-          completionHandler(nil, error);
+          completionHandler(nil, nil, error);
           return ;
         }
 
         NSDictionary *JSONResponse = [NSJSONSerialization JSONObjectWithData:data options:0 error:NULL];
         if ([[self class] responseHasError:JSONResponse]) {
-          completionHandler(nil, [[self class] errorFromResponse:JSONResponse]);
+          completionHandler(nil, nil, [[self class] errorFromResponse:JSONResponse]);
           return ;
         }
 
@@ -120,7 +120,13 @@
                                    }];
         }
         
-        completionHandler(documents, NULL);
+        NSDictionary *JSONPagination = JSONResponse[@"page_navigation"];
+        NSDictionary *pagination = @{@"firstPage": JSONPagination[@"first_page"],
+                                     @"currentPage": JSONPagination[@"cur_page"],
+                                     @"lastPage": JSONPagination[@"last_page"],
+                                     @"totalDocumentCount": JSONPagination[@"total_count"]};
+        
+        completionHandler(documents, pagination, NULL);
     }];
     [task resume];
 }
