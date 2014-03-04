@@ -1,65 +1,83 @@
 //
 //  HJHXpressEngine.h
-//  Uriuniv
+//  XpressEngine
 //
-//  Created by Jonghwan Hyeon on 2/10/14.
-//  Copyright (c) 2014 Uriuniv. All rights reserved.
+//  Created by Jonghwan Hyeon on 3/3/14.
+//  Copyright (c) 2014 Jonghwan Hyeon. All rights reserved.
 //
 
 #import <Foundation/Foundation.h>
 
 @interface HJHXpressEngine : NSObject
-@property (assign, nonatomic) BOOL isLoggedIn;
 
-+ (instancetype)sharedInstance;
+typedef void (^HJHXpressEngineCompletionHandler)(NSDictionary *response, NSError *error);
 
-- (void)loginWithIdentifier:(NSString *)identifier
-                   password:(NSString *)password
-           completionHander:(void (^)(BOOL isLoggedIn, NSError *error))completionHandler;
+@property (readonly, nonatomic) BOOL isLoggedIn;
+
+#pragma mark - initializer
+- (instancetype)initWithBaseURL:(NSURL *)baseURL;
++ (instancetype)xpressEngineWithBaseURL:(NSURL *)baseURL;
+
+#pragma mark - logging in / out
+- (void)loginWithIdentifier:(NSString *)identifier password:(NSString *)password
+                    success:(void (^)(NSDictionary *response))success
+                    failure:(void (^)(NSError *error))failure;
 - (void)logout;
 
-- (void)fetchDocumentListFromModuleIdentifier:(NSString *)identifier
-                                       onPage:(NSInteger)page
-                            completionHandler:(void (^)(NSArray *documents, NSDictionary *pagination, NSError *error))completionHandler;
-
+#pragma mark - fetching
+- (void)fetchDocumentListFromBoardModuleIdentifier:(NSString *)identifier onPage:(NSUInteger)page
+                                           success:(void (^)(NSDictionary *response))success
+                                           failure:(void (^)(NSError *error))failure;
 - (void)fetchDocumentFromDocumentIdentifier:(NSString *)identifier
-                          completionHandler:(void (^)(NSDictionary *document, NSError *error))completionHandler;
-
+                                    success:(void (^)(NSDictionary *response))success
+                                    failure:(void (^)(NSError *error))failure;
 - (void)fetchCommentsFromDocumentIdentifier:(NSString *)identifier
-                          completionHandler:(void (^)(NSArray *comments, NSError *error))completionHandler;
+                                    success:(void (^)(NSDictionary *response))success
+                                    failure:(void (^)(NSError *error))failure;
 
-- (void)fetchPostFromDocumentIdentifier:(NSString *)identifier
-                      completionHandler:(void (^)(NSDictionary *post, NSError *error))completionHandler;
+- (void)fetchFileInformationsFromDocumentIdentifier:(NSString *)identifier
+                                            success:(void (^)(NSDictionary *response))success
+                                            failure:(void (^)(NSError *error))failure;
+- (void)fetchFileFromLocation:(NSString *)location
+                      success:(void (^)(NSDictionary *response))success
+                      failure:(void (^)(NSError *error))failure;
 
-- (void)writeDocumentOnModuleIdentifier:(NSString *)identifier
-                              withTitle:(NSString *)title
-                               contents:(NSString *)contents
-                      completionHandler:(void (^)(NSString *identifier, NSError *error))completionHandler;
+#pragma mark - writing
+- (void)writeDocumentOnBoardModuleIdentifier:(NSString *)identifier
+                                   withTitle:(NSString *)title contents:(NSString *)contents
+                                     success:(void (^)(NSDictionary *response))success
+                                     failure:(void (^)(NSError *error))failure;
+- (void)writeCommentOnDocumentIdentifier:(NSString *)identifier
+                               withTitle:(NSString *)title contents:(NSString *)contents
+                                 success:(void (^)(NSDictionary *response))success
+                                 failure:(void (^)(NSError *error))failure;
 
-- (void)modifyDocumentHavingIdentifier:(NSString *)identifier
-                             withTitle:(NSString *)title
-                              contents:(NSString *)contents
-                     completionHandler:(void (^)(NSString *identifier, NSError *error))completionHandler;
-
-- (void)writeCommentOnDocumentIdentifier:(NSString *)documentIdentifier
-                            withContents:(NSString *)contents
-               completionHandler:(void (^)(NSString *documentIdentifier, NSString *commentIdentifier, NSError *error))completionHandler;
+#pragma mark - modifying
+- (void)modifyDocumentHavingDocumentIdentifier:(NSString *)identifier
+                                     withTitle:(NSString *)title contents:(NSString *)contents
+                                       success:(void (^)(NSDictionary *response))success
+                                       failure:(void (^)(NSError *error))failure;
 
 - (void)modifyCommentOnDocumentIdentifier:(NSString *)documentIdentifier
-                         havingIdentifier:(NSString *)commentIdentifier
-                         withContents:(NSString *)contents
-                    completionHandler:(void (^)(NSString *documentIdentifier, NSString *commentIdentifier, NSError *error))completionHandler;
+                  havingCommentIdentifier:(NSString *)commentIdentifier
+                             withContents:(NSString *)contents
+                                  success:(void (^)(NSDictionary *response))success
+                                  failure:(void (^)(NSError *error))failure;
 
-- (void)likeDocumentHavingIdentifier:(NSString *)identifier
-                   completionHandler:(void (^)(BOOL success, NSError *error))completionHandler;
+#pragma mark - liking
+- (void)likeDocumentHavingDocumentIdentifier:(NSString *)identifier
+                                     success:(void (^)(NSDictionary *response))success
+                                     failure:(void (^)(NSError *error))failure;
+- (void)likeCommentHavingCommentIdentifier:(NSString *)identifier
+                                   success:(void (^)(NSDictionary *response))success
+                                   failure:(void (^)(NSError *error))failure;
 
-- (void)dislikeDocumentHavingIdentifier:(NSString *)identifier
-                      completionHandler:(void (^)(BOOL success, NSError *error))completionHandler;
-
-- (void)likeCommentHavingIdentifier:(NSString *)identifier
-                  completionHandler:(void (^)(BOOL success, NSError *error))completionHandler;
-
-- (void)dislikeCommentHavingIdentifier:(NSString *)identifier
-                     completionHandler:(void (^)(BOOL success, NSError *error))completionHandler;
+#pragma mark - disliking
+- (void)dislikeDocumentHavingDocumentIdentifier:(NSString *)identifier
+                                        success:(void (^)(NSDictionary *response))success
+                                        failure:(void (^)(NSError *error))failure;
+- (void)dislikeCommentHavingCommentIdentifier:(NSString *)identifier
+                                      success:(void (^)(NSDictionary *response))success
+                                      failure:(void (^)(NSError *error))failure;
 
 @end
