@@ -25,9 +25,9 @@ typedef void (^HJHXpressEngineCompletionHandler)(NSDictionary *response, NSError
 - (void)logout;
 
 #pragma mark - fetching
-- (void)fetchDocumentListFromBoardModuleIdentifier:(NSString *)identifier onPage:(NSUInteger)page
-                                           success:(void (^)(NSDictionary *response))success
-                                           failure:(void (^)(NSError *error))failure;
+- (void)fetchDocumentsFromBoardModuleIdentifier:(NSString *)identifier onPage:(NSUInteger)page
+                                        success:(void (^)(NSDictionary *response))success
+                                        failure:(void (^)(NSError *error))failure;
 - (void)fetchDocumentFromDocumentIdentifier:(NSString *)identifier
                                     success:(void (^)(NSDictionary *response))success
                                     failure:(void (^)(NSError *error))failure;

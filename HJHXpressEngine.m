@@ -87,9 +87,9 @@
 }
 
 #pragma mark - fetching
-- (void)fetchDocumentListFromBoardModuleIdentifier:(NSString *)identifier onPage:(NSUInteger)page
-                                           success:(void (^)(NSDictionary *response))success
-                                           failure:(void (^)(NSError *error))failure
+- (void)fetchDocumentsFromBoardModuleIdentifier:(NSString *)identifier onPage:(NSUInteger)page
+                                        success:(void (^)(NSDictionary *response))success
+                                        failure:(void (^)(NSError *error))failure
 {
     NSURLRequest *request = [self.requestFactory requestForFetchingDocumentsFromBoardModuleIdentifier:identifier onPage:page];
     [self sendRequestWithRequest:request
