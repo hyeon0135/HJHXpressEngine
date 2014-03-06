@@ -10,8 +10,6 @@
 
 @interface HJHXpressEngine : NSObject
 
-typedef void (^HJHXpressEngineCompletionHandler)(NSDictionary *response, NSError *error);
-
 @property (readonly, nonatomic) BOOL isLoggedIn;
 
 #pragma mark - initializer
